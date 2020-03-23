@@ -1,0 +1,34 @@
+### A summary of the flow/connection between the different scripts
+
+...\carbon-index
+this folder holds the python environment.yml file, the main.py file, and many sub-folders
+\main.py
+this script runs a series of scripts that download, clean, anlayze, and output the data.
+
+...\carbon-index\src
+this folder holds the different scripts called by main.py
+\params.py
+this script holds a variety of input parameters that tell the scripts how to run. Most notably, it has the DATA_DATE, FINAL_DATA_YEAR, LAST_ANNUAL_923_YEAR, and FINAL_DATA_QUARTER parameters, which must be updated for each release.
+
+...\carbon-index\src\data
+this folder contains a number of scripts that retrieve online data. That raw, downloaded data is stored in the ...\carbon-index\data\raw_data folder. The scripts then clean that raw dat and save it in the ...\carbon-index\data\transformed_data folder.
+\cems.py
+this script retrieves the EPA CEMS database and organizes it into a large spreadsheet. That spreadsheet is stored in ...\carbon-index\data\transformed_data\epa_emissions as a .parquet file. The name of the file depends on the DATA_DATE parameter from the params.py file.
+\eia_bulk_extract.py
+this script retrieves EIA data and organizes it into three large spreadsheets. Those spreadsheets are stroed in ...\carbon-index\data\transformed_data\eia_compiled as .parquet files. The names of the files depend on the DATA_DATE parameter from the params.py file.
+\region_labels.py
+this script uses the raw data to decide which region each power plant belongs to. The results are stored in ...\carbon-index\data\transformed_data\facility_labels\Facility locations_RF.csv
+
+...\carbon-index\src\analysis
+this folder contains scripts that query the stored, cleaned data and process them into the carbon index results. 
+\calc_national_nerc_index.py
+this script uses a number of scripts in the ...\carbon-index\src\analysis and other folders to calculate the national-level carbon index results. It saves those results in the ...carbon_index\carbon-index\data\results folder as csv files. The names of the csv files depend on the FINAL_DATA_QUARTER parameter from the params.py file.
+\calc_state_index.py
+similar to the calc_national_nerc_index.py file, but this script focuses on the state level. 
+
+...\carbon-index\src\website
+this folder contains scripts that translate the analysis results into files that integrate with the website's backend.
+\blog_generator
+this scripts retrieves a number of different results and uses them to generate a .txt file. We use that .txt file to generate the website's newest blog entry. The output file is saved as ...\carbon-index\web_files\blog.txt
+\data_prep
+this script compiles and cleans the analysis results to produce a variety of csvs and xlsx files that will be uploaded to the website. These files are saved in the folder ...\carbon-index\web_files
