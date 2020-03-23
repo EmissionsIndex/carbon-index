@@ -1,0 +1,33 @@
+# jupyter notebooks
+.ipynb_checkpoints
+
+# Python
+*.py[cod]
+
+# Raw and downloaded data files
+/Data storage/923 raw data/*
+/Data storage/EIA downloads/*
+# /Data storage/Raw EIA bulk/*
+/Data storage/EPA downloads/*
+/Data storage/Raw data/*
+/Data storage/*
+/Data storage
+/data/*
+/Figures/*
+/Notebooks
+
+# zip and txt files (EIA bulk data)
+*.txt
+*.zip
+
+# Archived facility-level NERC results
+/Data storage/final NERC data/Archived
+
+# Mac
+*/.DS_Store
+.DS_store
+
+# pkg and vscode
+.vscode/*
+bulk_extract.lprof
+src.egg-info/PKG-INFO
