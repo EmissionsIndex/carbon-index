@@ -17,8 +17,8 @@
 /Notebooks
 
 # zip and txt files (EIA bulk data)
-*.txt
-*.zip
+#*.txt
+#*.zip
 
 # Archived facility-level NERC results
 /Data storage/final NERC data/Archived
