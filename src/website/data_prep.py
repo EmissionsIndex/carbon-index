@@ -94,7 +94,11 @@ def index_csv(path_in, time_unit, path_out):
     if time_unit == 'annual':
         #curr_year = datetime.today().year #t_edit comment out
         #df = df.loc[df['year'] < curr_year] #t_edit comment out
-        df = df.loc[df['year'] < FINAL_DATA_YEAR] #t_edit now this will be defined in params.py
+        #t_edit now this will be defined in params.py
+        if FINAL_DATA_QUARTER==4:
+        	df = df.loc[df['year'] <= FINAL_DATA_YEAR] 
+        else:	
+        	df = df.loc[df['year'] < FINAL_DATA_YEAR] 
 
     # Get the date portion of datetime as a string
     if time_unit == 'monthly':
@@ -162,7 +166,11 @@ def gen_csv(path_in, time_unit, path_out):
     if time_unit == 'annual':
         #curr_year = datetime.today().year #t_edit commented out
         #df = df.loc[df['year'] < curr_year] #t_edit commented out
-        df = df.loc[df['year'] < FINAL_DATA_YEAR] #t_edit now this will be defined in params.py
+        #t_edit now this will be defined in params.py
+        if FINAL_DATA_QUARTER==4:
+        	df = df.loc[df['year'] <= FINAL_DATA_YEAR] 
+        else:	
+        	df = df.loc[df['year'] < FINAL_DATA_YEAR] 
 
     # Get the date portion of datetime as a string
     if time_unit == 'monthly':
