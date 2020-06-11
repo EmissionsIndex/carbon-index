@@ -116,6 +116,9 @@ def label_new_spp_ercot(filename=None):
         # Scrape the 860m website and find the newest monthly file
         table = pd.read_html(base_url, header=0, flavor='lxml')[0]
         month, year = table['EIA 860M'][0].split()  # 'Month year' as a string
+        #in 2020, EIA misspelled February on their website and it caused an error in this code because their xlsx download file had February spelled correctly
+        if month == 'Februay':
+            month = 'February' 
         month = month.lower()
         filename = '{}_generator{}.xlsx'.format(month, year)
 

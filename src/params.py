@@ -6,7 +6,7 @@ from pathlib import Path
 from src import __file__
 
 # Set a unique identifier (e.g. date of analysis) for the results files
-DATA_DATE = '2020-04-01' #e.g, in 2020: for Q1, '2020-04-01'; for Q2, '2020-07-01'; for Q3, '2020-10-01'; for Q4, '2021-01-01' Note that the string here is only used for naming different data files, so the actual date and numbers are unimportant from a data gathering/anlaysis perspective--they only tell the user when that data was created via the filename. Stick with the convention above for consistency;
+DATA_DATE = '2019-12-01' #e.g, in 2020: for Q1, '2020-03-01'; for Q2, '2020-06-01'; for Q3, '2020-09-01'; for Q4, '2020-12-01' Note that the string here is only used for naming different data files, so the actual date and numbers are unimportant from a data gathering/anlaysis perspective--they only tell the user when that data was created via the filename. Stick with the convention above for consistency;
 FINAL_DATA_YEAR = 2019
 LAST_ANNUAL_923_YEAR = 2018 # Most recent year of annual (full) 923 release
 FINAL_DATA_QUARTER = 4
