@@ -131,7 +131,7 @@ def index_csv(path_in, time_unit, path_out):
 
     # Export dataframe
     cols = always_export + time_unit_cols[time_unit]
-    df[cols].to_csv(path_out, index=False, quoting=csv.QUOTE_NONNUMERIC,
+    df[cols].to_csv(path_out, index=False, quotechar='"', quoting=csv.QUOTE_NONNUMERIC,
                     encoding='utf-8')
     # return df
 
@@ -197,7 +197,7 @@ def gen_csv(path_in, time_unit, path_out):
     df['generation (M MWh)'] = df.loc[:, 'generation (mwh)'] / 1e6
 
     cols = always_export + time_unit_cols[time_unit]
-    df[cols].to_csv(path_out, index=False, quoting=csv.QUOTE_NONNUMERIC)
+    df[cols].to_csv(path_out, index=False, quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
 
 def _remove_partial_years(df):
 
@@ -211,7 +211,7 @@ def _remove_partial_years(df):
     df = df.loc[df.year.isin(keep_years), :]
 
 
-def annual_index_timeseries_csv(path_in, path_out, region_type, only_final_year=False):
+def annual_index_timeseries(path_in, path_out, region_type, output_type, only_final_year=False):
 
     df = pd.read_csv(path_in)
     _remove_partial_years(df)
@@ -223,11 +223,21 @@ def annual_index_timeseries_csv(path_in, path_out, region_type, only_final_year=
     df_annual['index'] = df_annual['final co2 (kg)'] / df_annual['generation (mwh)']
     df_annual['indexlb'] = df_annual['index'] * 2.2046
 
+    #remove any data prior to final data year unless we are in quarter 4
+    if FINAL_DATA_QUARTER==4:
+        df_annual = df_annual.loc[df_annual['year'] <= FINAL_DATA_YEAR] 
+    else:   
+        df_annual = df_annual.loc[df_annual['year'] < FINAL_DATA_YEAR] 
+
     if only_final_year:
         final_year = df_annual.year.max()
         df_annual = df_annual.loc[df_annual.year == final_year, :]
 
-    df_annual.to_csv(path_out, index=False)
+    if output_type=='csv':
+        df_annual.to_csv(path_out, index=False)
+
+    if output_type=='excel':
+        df_annual.to_excel(path_out, index=False)
 
 
 def annual_index_single_json(path_in, path_out, region_type):
@@ -335,6 +345,10 @@ def make_web_files():
         DATA_PATHS['web_files']
         / 'state_index_map_website.csv'
     )
+    state_path_out_excel = (
+        DATA_PATHS['web_files']
+        / 'US State Power Sector CO2 Emissions.xlsx'
+    )
     #nerc_path_in = (
     #    DATA_PATHS['results']
     #    / f'NERC gen emissions and index {DATA_DATE}.csv'
@@ -343,10 +357,19 @@ def make_web_files():
     #    DATA_PATHS['web_files'] / 'NERCemissions.json'
     #)
 
-    annual_index_timeseries_csv(
+    annual_index_timeseries(
         path_in=state_path_in,
         path_out=state_path_out,
-        region_type='state'
+        region_type='state',
+        output_type='csv',
+        only_final_year=True
+    )
+
+    annual_index_timeseries(
+        path_in=state_path_in,
+        path_out=state_path_out_excel,
+        region_type='state',
+        output_type='excel'
     )
 
     downloadable_xlsx()

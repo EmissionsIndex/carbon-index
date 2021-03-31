@@ -133,22 +133,45 @@ def label_new_spp_ercot(filename=None):
         month = month.lower()
         filename = '{}_generator{}.xlsx'.format(month, year)
     ##t_edit_2_2021, the try snippet works if you are downloading the most recent month of data. the except snippet works if not (it adds "archive/" to the url)
+    ##t_edit_3_2021, added another snippet here that will iterate through skiprows until the code works. In the december 2020 version, EIA inexplicable adds an empty row above
     try:
-        url = base_url + f'xls/{filename}'
-        save_path = DATA_PATHS['eia860m'] / filename
-        download_save(url=url, save_path=save_path)
-        _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                              usecols='C,F,P,AE', skiprows=1)
-    except:
-        url = base_url + 'archive/' + f'xls/{filename}'
-        save_path = DATA_PATHS['eia860m'] / filename
-        download_save(url=url, save_path=save_path)
-        _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                              usecols='C,F,P,AE', skiprows=1)
-        
-    _m860.columns = _m860.columns.str.lower()
+        skiprows_int=1
+        try:
+            url = base_url + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+        except:
+            url = base_url + 'archive/' + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            
+        _m860.columns = _m860.columns.str.lower()
 
-    m860 = _m860.loc[(_m860['operating year'] > LAST_ANNUAL_923_YEAR)].copy()
+        m860 = _m860.loc[(_m860['operating year'] > LAST_ANNUAL_923_YEAR)].copy()
+
+    except:
+        skiprows_int=2
+        try:
+            url = base_url + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+        except:
+            url = base_url + 'archive/' + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            
+        _m860.columns = _m860.columns.str.lower()
+
+        m860 = _m860.loc[(_m860['operating year'] > LAST_ANNUAL_923_YEAR)].copy()
+
 
     m860.loc[(m860['plant state'].isin(['TX', 'OK'])) &
              (m860['balancing authority code'] == 'SWPP'), 'nerc'] = 'SPP'

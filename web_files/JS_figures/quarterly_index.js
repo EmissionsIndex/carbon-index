@@ -1,20 +1,14 @@
 (function () {
     var data_url = '//s3.amazonaws.com/org-emissionsindex/js/Index-Chart/quarterly_index_website.csv';
     var d3_qi = Plotly.d3;
-    var WIDTH_IN_PERCENT_OF_PARENT = 100;
-    var HEIGHT_IN_PERCENT_OF_PARENT = 100;//100;//95;
+    var WIDTH_IN_PERCENT_OF_PARENT = 100,
+        HEIGHT_IN_PERCENT_OF_PARENT = 100;
     var gd_qi = document.getElementById('myDiv_quarter_index');
     var gd3_qi = d3_qi.select("div[id='myDiv_quarter_index']")
         .style({
             width: WIDTH_IN_PERCENT_OF_PARENT + '%',
-            // 'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
-
-            // When height is given as 'vh' the plot won't resize vertically.
-            height: HEIGHT_IN_PERCENT_OF_PARENT + '%', //'vh',
-
-            'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) + '%'//'vh'
-            //'margin-top': 45 + 'px'
-            //     'margin-top': 5 + 'vh'
+            height: HEIGHT_IN_PERCENT_OF_PARENT + '%',
+            'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) + '%'
         });
     // 2005 baseline in SI units
     var index_2005 = 599
@@ -22,23 +16,6 @@
     var kg_to_lb = 2.2046
 
     var my_Div_qi = gd3_qi.node();
-
-    // Helpers
-    var get = function (data, column) {
-        return data.map(function (x) {
-            return x[column];
-        });
-    };
-
-    // var zip = function (xs, ys) {
-    //     return xs.map(function (x, i) {
-    //         return [x, ys[i]];
-    //     });
-    // }
-    //
-    // var zipmap = function (func, xs, ys) {
-    //     return zip(xs, ys).map(function (xy) { return func(xy[0], xy[1]); });
-    // };
 
     var update_menu = [
         {
@@ -49,6 +26,7 @@
             y: 1.05,
             xanchor: "left",
             yanchor: "auto",
+            active: 0,
             buttons: [
                 {
                     method: 'update',
@@ -172,7 +150,7 @@
             "dtick": 8,
             "showgrid": false,
             "fixedrange": false,
-            "type": "category",
+            //"type": "category",
             "autorange": true
         },
         "images": [
@@ -320,22 +298,22 @@
             "dtick": 8,
             "showgrid": false,
             "fixedrange": false,
-            "type": "category",
+            //"type": "category",
             "autorange": true
         },
         "images": [
-            // {
-            //     "opacity": 1,
-            //     "yanchor": "middle",
-            //     "xref": "paper",
-            //     "xanchor": "right",
-            //     "yref": "paper",
-            //     "sizex": 0.5,
-            //     "sizey": 0.12,
-            //     "source": "//s3.amazonaws.com/org-emissionsindex/content/CMU_wordmarks/CMU_Logo_Stack_Red.png",
-            //     "y": -0.03,
-            //     "x": -0.03
-            // }
+            {
+                "opacity": 1,
+                "yanchor": "middle",
+                "xref": "paper",
+                "xanchor": "right",
+                "yref": "paper",
+                "sizex": 0.5,
+                "sizey": 0.12,
+                "source": "//s3.amazonaws.com/org-emissionsindex/content/CMU_wordmarks/CMU_Logo_Stack_Red.png",
+                "y": -0.03,
+                "x": -0.03
+            }
         ],
         "font": {
             "size": 13
@@ -469,7 +447,7 @@
             "dtick": 8,
             "showgrid": false,
             "fixedrange": false,
-            "type": "category",
+            //"type": "category",
             "autorange": true
         },
         "images": [
@@ -560,14 +538,14 @@
     var plot_options_qi = {
         scrollZoom: false, // lets us scroll to zoom in and out - works
         showLink: false, // removes the link to edit on plotly - works
-        modeBarButtonsToRemove: ['autoScale2d', 'select2d', 'zoom2d', 'pan2d',
-            'hoverCompareCartesian', 'zoomOut2d', //'zoomIn2d',
+        modeBarButtonsToRemove: ['pan2d', 'autoScale2d', 'select2d', 'zoom2d',
+            'zoomOut2d', 'hoverCompareCartesian', //'zoomIn2d',
             'hoverClosestCartesian', 'sendDataToCloud'],
         //modeBarButtonsToAdd: ['lasso2d'],
         modeBarButtonsToAdd: [{
             name: 'Download data',
             icon: icon_qi,
-            click: function () {
+            click: function (gd_qi) {
                 //window.location.href = 'https://github.com/EmissionsIndex/Emissions-Index/raw/master/Calculated%20values/2018/2018%20Q4%20US%20Power%20Sector%20CO2%20Emissions%20Intensity.xlsx';
                 window.location.href = '//s3.amazonaws.com/org-emissionsindex/js/Data-Downloads/US-Power-Sector-CO2-Emissions-Intensity.xlsx';
             }
@@ -582,49 +560,73 @@
 
     var aspect_ratio = 7.0 / 5.0;
 
+    var get = function (data, column) {
+        return data.map(function (x) {
+            return x[column];
+        });
+    };
+
+    var zip = function (xs, ys) {
+        return xs.map(function (x, i) {
+            return [x, ys[i]];
+        });
+    }
+
+    var zipmap = function (func, xs, ys) {
+        return zip(xs, ys).map(function (xy) { return func(xy[0], xy[1]); });
+    };
+
     d3_qi.csv(data_url, function (error, data) {
         if (error) {
             console.log(error);
         } else {
-            // var quarters = zipmap(function (year, quarter) {
-            //     return year + ' Q' + quarter;
-            // }, get(data, 'year'), get(data, 'quarter'));
-            var data_qi = [
-                {
-                    "uid": "f0db50",
-                    "ysrc": "schivlg:87:75240c",
-                    "hoverinfo": "text+x",
-                    "xsrc": "schivlg:87:ca81d3",
-                    "textsrc": "schivlg:87:27ca70",
-                    "text": get(data, 'Imperial hovertext'),
-                    visible: true,
-                    "y": get(data, 'index (lb/mwh)'),
-                    "x": get(data, 'year_quarter'),
-                    "line": {
-                        "shape": "spline",
-                        "smoothing": 0.6
-                    },
-                    "type": "scatter",
-                    "mode": "lines"
+
+            var quarters = get(data, 'year_quarter'); //t
+
+            var data_qi = [{
+                "autobinx": true,
+                "uid": "f48e6d",
+                "ysrc": "schivlg:85:7b808f",
+                "hoverinfo": "text+x",
+                "textsrc": "schivlg:85:41406a",
+                "name": "y",
+                "xsrc": "schivlg:85:5e7b85",
+                "text": get(data, 'Imperial hovertext'),
+                "visible": true,
+                "y": get(data, 'index (lb/mwh)'),
+                "x": quarters,
+                "line": {
+                    "shape": "spline",
+                    "smoothing": 0.6,
+                    "width": 2
                 },
-                {
-                    "uid": "f0db50",
-                    "ysrc": "schivlg:87:75240c",
-                    "hoverinfo": "text+x",
-                    "xsrc": "schivlg:87:ca81d3",
-                    "textsrc": "schivlg:87:27ca70",
-                    "text": get(data, 'SI hovertext'),
-                    visible: false,
-                    "y": get(data, 'index (g/kwh)'),
-                    "x": get(data, 'year_quarter'),
-                    "line": {
-                        "shape": "spline",
-                        "smoothing": 0.6
-                    },
-                    "type": "scatter",
-                    "mode": "lines"
-                }
+                "autobiny": true,
+                "type": "scatter",
+                "mode": "lines"
+            },
+            {
+                "autobinx": true,
+                "uid": "f48e6d",
+                "ysrc": "schivlg:85:7b808f",
+                "hoverinfo": "text+x",
+                "textsrc": "schivlg:85:41406a",
+                "name": "y",
+                "xsrc": "schivlg:85:5e7b85",
+                "text": get(data, 'SI hovertext'),
+                "visible": false,
+                "y": get(data, 'index (g/kwh)'),
+                "x": quarters,
+                "line": {
+                    "shape": "spline",
+                    "smoothing": 0.6,
+                    "width": 2
+                },
+                "autobiny": true,
+                "type": "scatter",
+                "mode": "lines"
+            }
             ]
+
             if (initial_width_qi < 500) {
                 var layout1_qi = frame1_qi
                 layout1_qi.height = (initial_width_qi - 32) / aspect_ratio;
@@ -729,34 +731,32 @@
         };
 
         if (window_width_qi < 500) {
-            frame1_qi.font.size = 10;
-            Plotly.relayout('myDiv_quarter_index',
+            Plotly.relayout(my_Div_qi,
                 frame1_qi);
-        } else if (window_width_qi <= 767) {
 
-            //could rescale the left margin in this section too..
+        } else if (window_width_qi <= 767) {
             frame2_qi.margin.l = 110;
-            Plotly.relayout('myDiv_quarter_index',
+            Plotly.relayout(my_Div_qi,
                 frame2_qi);
 
         } else if (window_width_qi <= 1023) {
             // left pad of 150 is reasonable at 1023, but too much at 768
-            var percent_extra_pad_qi = (1023 - window_width_qi) / (1023 - 768)
+            var percent_extra_pad_qi = (1023 - window_width_qi) / (1023.0 - 768.0)
             frame3_qi.margin.l = 150 - (40 * percent_extra_pad_qi)
-            Plotly.relayout('myDiv_quarter_index',
+            Plotly.relayout(my_Div_qi,
                 frame3_qi);
 
         } else if (window_width_qi <= 1279) {
 
-            //adjust the margin down here?
             frame2_qi.margin.l = 110;
-            Plotly.relayout('myDiv_quarter_index',
+            Plotly.relayout(my_Div_qi,
                 frame2_qi);
 
         } else {
             frame2_qi.margin.l = 110;
-            Plotly.relayout('myDiv_quarter_index',
+            Plotly.relayout(my_Div_qi,
                 frame2_qi);
+
         };
 
         Plotly.Plots.resize(my_Div_qi);
@@ -764,3 +764,4 @@
     });
 
 })();
+
