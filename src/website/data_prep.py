@@ -1,6 +1,8 @@
 #2020-02-18 edits by Thomas marked with #t_edit : 
 #   most of these edits were to fix a problem where the web_files csv had too many years, quarters, or months -- that is they included years, quarters, and months with incomplete data.
 #   also added a script that generates the xlsx files for website audience download
+#2021-07-01 edits by Thomas marked with #t_edit_2:
+#   made some updates to improve what I did in 2020-02-18
 
 import pandas as pd
 import numpy as np
@@ -100,13 +102,21 @@ def index_csv(path_in, time_unit, path_out):
         else:	
         	df = df.loc[df['year'] < FINAL_DATA_YEAR] 
 
-    # Get the date portion of datetime as a string
+    # Don't include next quarter in the quarterly data because it will only have one or two of the three necessary months
+    #t_edit_2 added quarterly
+    if time_unit == 'quarterly':
+        #drop any quarters beyond of the scope of the current quarter
+        df = df.loc[(df['year']<=FINAL_DATA_YEAR) & (~((df['year']==FINAL_DATA_YEAR) & (df['quarter']>FINAL_DATA_QUARTER)))] 
+    
+    # Don't include next month in the monthly data just for continuity
+    #t_edit_2 fixed the code--it wasn't screening the unwanted months correctly
     if time_unit == 'monthly':
         # Split datetime into a list then take first element from the list
         #http://pandas.pydata.org/pandas-docs/stable/text.html#splitting-and-replacing-strings
         df['date'] = df.loc[:, 'datetime'].str.split().str[0]
         #t_edit drop any months outside of the scope of the current quarter
-        df = df.loc[~((df['year']>FINAL_DATA_YEAR) & (df['month']<=FINAL_DATA_QUARTER*3))] #t_edit
+        #df = df.loc[~((df['year']>FINAL_DATA_YEAR) & (df['month']<=FINAL_DATA_QUARTER*3))] #t_edit
+        df = df.loc[(df['year']<=FINAL_DATA_YEAR) & (~((df['year']==FINAL_DATA_YEAR) & (df['month']>FINAL_DATA_QUARTER*3)))] #t_edit2
 
     always_export = ['index (g/kwh)', 'index (lb/mwh)',
                      'final co2 (million mt)',
@@ -171,14 +181,22 @@ def gen_csv(path_in, time_unit, path_out):
         	df = df.loc[df['year'] <= FINAL_DATA_YEAR] 
         else:	
         	df = df.loc[df['year'] < FINAL_DATA_YEAR] 
-
-    # Get the date portion of datetime as a string
+    
+    # Don't include next quarter in the quarterly data because it will only have one or two of the three necessary months
+    #t_edit_2 added quarterly
+    if time_unit == 'quarterly':
+        #drop any quarters beyond of the scope of the current quarter
+        df = df.loc[(df['year']<=FINAL_DATA_YEAR) & (~((df['year']==FINAL_DATA_YEAR) & (df['quarter']>FINAL_DATA_QUARTER)))] 
+    
+    # Don't include next month in the monthly data just for continuity
+    #t_edit_2 fixed the code--it wasn't screening the unwanted months correctly
     if time_unit == 'monthly':
         # Split datetime into a list then take first element from the list
         #http://pandas.pydata.org/pandas-docs/stable/text.html#splitting-and-replacing-strings
         df['date'] = df.loc[:, 'datetime'].str.split().str[0]
         #t_edit drop any months outside of the scope of the current quarter
-        df = df.loc[~((df['year']>FINAL_DATA_YEAR) & (df['month']<=FINAL_DATA_QUARTER*3))] #t_edit
+        #df = df.loc[~((df['year']>FINAL_DATA_YEAR) & (df['month']<=FINAL_DATA_QUARTER*3))] #t_edit
+        df = df.loc[(df['year']<=FINAL_DATA_YEAR) & (~((df['year']==FINAL_DATA_YEAR) & (df['month']>FINAL_DATA_QUARTER*3)))] #t_edit2
                     
     # If I haven't modified the file to include a "Total" category...
     if 'Total' not in df['fuel category'].unique():
@@ -299,7 +317,8 @@ def downloadable_xlsx():
     df_idx_qtr = df_idx_qtr[idx_qtr_columns_keep]
     df_idx_mon = pd.read_csv(DATA_PATHS['results'] / f'Monthly index {QUARTER_YEAR}.csv', dtype=dtypes['monthly'])
     df_idx_mon = df_idx_mon[idx_mon_columns_keep]
-    #remove years and quarters with incomplete data.
+    #remove years and quarters and months with incomplete data.
+    #t_edit_2 added months
     if FINAL_DATA_QUARTER == 4:
         ann_year_max = FINAL_DATA_YEAR
     else:
@@ -308,6 +327,8 @@ def downloadable_xlsx():
     df_idx_ann = df_idx_ann[df_idx_ann['year']<=ann_year_max]
     df_gen_qtr = df_gen_qtr[~(((df_gen_qtr['year']==FINAL_DATA_YEAR)&(df_gen_qtr['quarter']>FINAL_DATA_QUARTER))|(df_gen_qtr['year']>FINAL_DATA_YEAR))]
     df_idx_qtr = df_idx_qtr[~(((df_idx_qtr['year']==FINAL_DATA_YEAR)&(df_idx_qtr['quarter']>FINAL_DATA_QUARTER))|(df_idx_qtr['year']>FINAL_DATA_YEAR))]
+    df_gen_mon = df_gen_mon[~(((df_gen_mon['year']==FINAL_DATA_YEAR)&(df_gen_mon['month']>FINAL_DATA_QUARTER*3))|(df_gen_mon['year']>FINAL_DATA_YEAR))] #t_edit_2
+    df_idx_mon = df_idx_mon[~(((df_idx_mon['year']==FINAL_DATA_YEAR)&(df_idx_mon['month']>FINAL_DATA_QUARTER*3))|(df_idx_mon['year']>FINAL_DATA_YEAR))] #t_edit_2
     #export to xlsx
     #generation
     with pd.ExcelWriter(out_gen) as writer:
