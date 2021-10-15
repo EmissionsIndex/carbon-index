@@ -1,16 +1,16 @@
-## Comparing Q1 2021 to Q1 2020
-The Carnegie Mellon Power Sector Carbon Index provides a comprehensive picture of the carbon intensity of electricity production in the during the previous 12 months and over an extended period to 2001. The CMU index also provides a summary of how much electricity generation is from coal, natural gas, nuclear, and renewables. According to the Carnegie Mellon Power Sector Carbon Index, U.S. power plant emissions averaged 834 lb CO<sub>2</sub> per MWh in the first quarter of 2021, which was up 10 percent from the same time frame in 2020.
+## Comparing Q2 2021 to Q2 2020
+The Carnegie Mellon Power Sector Carbon Index provides a comprehensive picture of the carbon intensity of electricity production in the during the previous 12 months and over an extended period to 2001. The CMU index also provides a summary of how much electricity generation is from coal, natural gas, nuclear, and renewables. According to the Carnegie Mellon Power Sector Carbon Index, U.S. power plant emissions averaged 807 lb CO<sub>2</sub> per MWh in the second quarter of 2021, which was up 10 percent from the same time frame in 2020.
 
 ## Comparing performance in 2021 to 2005
-The Power Sector Carbon Index for Q1 of 2021 was 37% lower than in the annual value in 2005, from 1,321 lb CO<sub>2</sub> per MWh to 834 lb CO<sub>2</sub> per MWh (or 599 to 379 g CO<sub>2</sub> per kWh). As of Q1 of 2021, the rolling annual average carbon intensity was 824 lb CO<sub>2</sub> per MWh (or 374 g CO<sub>2</sub> per kWh), which is 38% lower than the annual value in 2005. Total annual rolling CO<sub>2</sub> emissions were 1,522 million metric tonnes, which was 37% lower than in 2005. 
+The Power Sector Carbon Index for Q2 of 2021 was 39% lower than in the annual value in 2005, from 1,321 lb CO<sub>2</sub> per MWh to 807 lb CO<sub>2</sub> per MWh (or 599 to 366 g CO<sub>2</sub> per kWh). As of Q2 of 2021, the rolling annual average carbon intensity was 841 lb CO<sub>2</sub> per MWh (or 381 g CO<sub>2</sub> per kWh), which is 36% lower than the annual value in 2005. Total annual rolling CO<sub>2</sub> emissions were 1,573 million metric tonnes, which was 35% lower than in 2005. 
 
-## Highlights of the 2021 Q1 results
-- Total generation was up 2% in 2021 Q1 (997 million MWh) when compared to 2020 Q1 (974 million MWh).
-- Coal generation was up 35% in 2021 Q1 (232 million MWh) when compared to 2020 Q1 (172 million MWh). Coal represented 23% of total generation in 2021 Q1
-- Natural Gas generation was down 10% in 2021 Q1 (342 million MWh) when compared to 2020 Q1 (382 million MWh). Natural Gas represented 34% of total generation in 2021 Q1
-- Hydro generation was down 7% in 2021 Q1 (70 million MWh) when compared to 2020 Q1 (75 million MWh). Hydro represented 7% of total generation in 2021 Q1
-- Wind generation was up 10% in 2021 Q1 (97 million MWh) when compared to 2020 Q1 (87 million MWh). Wind represented 10% of total generation in 2021 Q1
-- Solar generation was up 24% in 2021 Q1 (31 million MWh) when compared to 2020 Q1 (25 million MWh). Solar represented 3% of total generation in 2021 Q1
-- Nuclear generation was down 3% in 2021 Q1 (198 million MWh) when compared to 2020 Q1 (204 million MWh). Nuclear represented 20% of total generation in 2021 Q1
-- Other generation was up 2% in 2021 Q1 (10 million MWh) when compared to 2020 Q1 (10 million MWh). Other represented 1% of total generation in 2021 Q1
-- Other Renewables generation was down 4% in 2021 Q1 (18 million MWh) when compared to 2020 Q1 (19 million MWh). Other Renewables represented 2% of total generation in 2021 Q1
+## Highlights of the 2021 Q2 results
+- Total generation was up 6% in 2021 Q2 (998 million MWh) when compared to 2020 Q2 (945 million MWh).
+- Coal generation was up 35% in 2021 Q2 (205 million MWh) when compared to 2020 Q2 (152 million MWh). Coal represented 21% of total generation in 2021 Q2
+- Natural Gas generation was up 1% in 2021 Q2 (369 million MWh) when compared to 2020 Q2 (367 million MWh). Natural Gas represented 37% of total generation in 2021 Q2
+- Hydro generation was down 17% in 2021 Q2 (67 million MWh) when compared to 2020 Q2 (82 million MWh). Hydro represented 7% of total generation in 2021 Q2
+- Wind generation was up 9% in 2021 Q2 (95 million MWh) when compared to 2020 Q2 (87 million MWh). Wind represented 10% of total generation in 2021 Q2
+- Solar generation was up 26% in 2021 Q2 (50 million MWh) when compared to 2020 Q2 (40 million MWh). Solar represented 5% of total generation in 2021 Q2
+- Nuclear generation was down 3% in 2021 Q2 (185 million MWh) when compared to 2020 Q2 (191 million MWh). Nuclear represented 19% of total generation in 2021 Q2
+- Other generation was flat in 2021 Q2 (8 million MWh) when compared to 2020 Q2 (8 million MWh). Other represented 1% of total generation in 2021 Q2
+- Other Renewables generation was down 3% in 2021 Q2 (17 million MWh) when compared to 2020 Q2 (18 million MWh). Other Renewables represented 2% of total generation in 2021 Q2
