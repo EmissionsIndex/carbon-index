@@ -25,7 +25,7 @@ STATE_GEOS = ['USA-{}'.format(state) for state in STATES]
 
 def download_ELEC(date=DATA_DATE):
 
-    url = 'http://api.eia.gov/bulk/ELEC.zip'
+    url = 'https://api.eia.gov/bulk/ELEC.zip'
 
     save_path = DATA_PATHS['eia_bulk'] / 'ELEC_{}.zip'.format(date)
     if not save_path.exists():

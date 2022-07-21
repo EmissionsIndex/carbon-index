@@ -3,13 +3,16 @@ Determine the region (currently NERC region) that each power plant is part of
 for every year of calculations
 
 2020-02-17 edits by thomas marked as #t_edit
+2021-02-09 edits by thomas marked as #t_edit_2_2021
+    fixed an issue where the EIA860M data was not being read. I've updated the code now so that it just tries to read the month and year according to what's in the params.py file. Previously it was trying to read the most recent month of data from the EIA860M website.
 
 """
 
-from src.params import DATA_PATHS, DATA_DATE, LAST_ANNUAL_923_YEAR, EIA_860_NERC_INFO
+from src.params import DATA_PATHS, DATA_DATE, LAST_ANNUAL_923_YEAR, EIA_860_NERC_INFO, FINAL_DATA_YEAR, FINAL_DATA_QUARTER
 from src.util import download_unzip, download_save
 
 import pandas as pd
+import scipy
 # from sklearn import neighbors, metrics
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
@@ -112,26 +115,63 @@ def label_new_spp_ercot(filename=None):
     base_url = 'https://www.eia.gov/electricity/data/eia860m/'
 
     if not filename:
-
-        # Scrape the 860m website and find the newest monthly file
-        table = pd.read_html(base_url, header=0, flavor='lxml')[0]
-        month, year = table['EIA 860M'][0].split()  # 'Month year' as a string
-        #in 2020, EIA misspelled February on their website and it caused an error in this code because their xlsx download file had February spelled correctly
-        if month == 'Februay':
-            month = 'February' 
+        
+        #t_edit_2_2021, commented out the lines below and replace them so that month, year comes from the params.py file
+# =============================================================================
+#         # Scrape the 860m website and find the newest monthly file
+#         table = pd.read_html(base_url, header=0, flavor='lxml')[0]
+#         month, year = table['EIA 860M'][0].split()  # 'Month year' as a string
+# =============================================================================
+        month = scipy.where(FINAL_DATA_QUARTER==1,'March', scipy.where(FINAL_DATA_QUARTER==2,'June', scipy.where(FINAL_DATA_QUARTER==3,'September', scipy.where(FINAL_DATA_QUARTER==4,'December', 'ERROR_eia_860m_month_string')))).item()
+        year = FINAL_DATA_YEAR
+        #t_edit_2_2021, commented out the lines below, this Februay error is no longer an issue
+# =============================================================================
+#         #in 2020, EIA misspelled February on their website and it caused an error in this code because their xlsx download file had February spelled correctly
+#         if month == 'Februay':
+#             month = 'February' 
+# =============================================================================
         month = month.lower()
         filename = '{}_generator{}.xlsx'.format(month, year)
+    ##t_edit_2_2021, the try snippet works if you are downloading the most recent month of data. the except snippet works if not (it adds "archive/" to the url)
+    ##t_edit_3_2021, added another snippet here that will iterate through skiprows until the code works. In the december 2020 version, EIA inexplicable adds an empty row above
+    try:
+        skiprows_int=1
+        try:
+            url = base_url + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+        except:
+            url = base_url + 'archive/' + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            
+        _m860.columns = _m860.columns.str.lower()
 
-    url = base_url + f'xls/{filename}'
-    save_path = DATA_PATHS['eia860m'] / filename
-    if not save_path.exists():
-        download_save(url=url, save_path=save_path)
+        m860 = _m860.loc[(_m860['operating year'] > LAST_ANNUAL_923_YEAR)].copy()
 
-    _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                          usecols='C,F,P,AE', skiprows=1)
-    _m860.columns = _m860.columns.str.lower()
+    except:
+        skiprows_int=2
+        try:
+            url = base_url + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+        except:
+            url = base_url + 'archive/' + f'xls/{filename}'
+            save_path = DATA_PATHS['eia860m'] / filename
+            download_save(url=url, save_path=save_path)
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
+                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            
+        _m860.columns = _m860.columns.str.lower()
 
-    m860 = _m860.loc[(_m860['operating year'] > LAST_ANNUAL_923_YEAR)].copy()
+        m860 = _m860.loc[(_m860['operating year'] > LAST_ANNUAL_923_YEAR)].copy()
+
 
     m860.loc[(m860['plant state'].isin(['TX', 'OK'])) &
              (m860['balancing authority code'] == 'SWPP'), 'nerc'] = 'SPP'
