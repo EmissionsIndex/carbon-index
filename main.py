@@ -3,7 +3,7 @@ def main():
     from src.data.cems import download_cems
     from src.data.eia_bulk_extract import extract_all_bulk_data
     from src.data.region_labels import write_region_labels
-    download_cems()
+    #download_cems() #commented out until I incorporate the manual cems_new.py fix into the existing cems.py script
     extract_all_bulk_data()
     write_region_labels()
 

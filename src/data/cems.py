@@ -25,9 +25,15 @@ class CEMS():
     def connect_ftp(self):
         # Open ftp connection and change top-level folder above years
         print('Opening ftp connection')
+        print ('A')
         self.ftp = FTP(self.ftp_base)
+        print ('B')
+        self.ftp.set_pasv(False)
+        print ('C')
         self.ftp.login()
+        print ('D')
         self.ftp.cwd(self.ftp_ext)
+        print ('E')
 
     def fetch_cems_data(self, years):
         """

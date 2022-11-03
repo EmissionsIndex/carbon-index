@@ -1,4 +1,10 @@
-# -*- coding: utf-8 -*-
+"""
+2022-11-02 edits by thomas mrked as #t_edit_11_2022
+    fixed an issue where the EIA923 started using 'respondent frequency' instead of 'reporting frequency'
+"""
+
+
+
 
 import os
 from os.path import join, abspath, dirname, split
@@ -86,7 +92,8 @@ def get_annual_plants(year,
     df.columns = [col.lower().replace('\n', ' ').strip() for col in df.columns]
 
     # Get the plant ids for just plants that report annually
-    annual_plants = df.loc[df['reporting frequency'] == 'A', 'plant id']
+    #t_edit_11_2022 updated 'reporting frequency' to 'respondent frequency'
+    annual_plants = df.loc[df['respondent frequency'] == 'A', 'plant id']
     annual_plants = (annual_plants.drop_duplicates()
                                   .reset_index(drop=True))
 

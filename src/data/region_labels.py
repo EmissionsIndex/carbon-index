@@ -5,6 +5,8 @@ for every year of calculations
 2020-02-17 edits by thomas marked as #t_edit
 2021-02-09 edits by thomas marked as #t_edit_2_2021
     fixed an issue where the EIA860M data was not being read. I've updated the code now so that it just tries to read the month and year according to what's in the params.py file. Previously it was trying to read the most recent month of data from the EIA860M website.
+2022-11-02 edits by thomas mrked as #t_edit_11_2022
+    fixed an issue where the EIA860M data was being imported according to the Excel Column Index Letter. EIA860M added some columns of information, so the old Column Index Letters were no longer correct. I updated these to use the column names instead of the Excel Column Index Letters.
 
 """
 
@@ -140,14 +142,16 @@ def label_new_spp_ercot(filename=None):
             url = base_url + f'xls/{filename}'
             save_path = DATA_PATHS['eia860m'] / filename
             download_save(url=url, save_path=save_path)
-            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            #t_edit_11_2022 changed usecols='C,F,P,AE' to names=['Plant ID', ...]
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1, skiprows=skiprows_int)
+            _m860 = _m860[['Plant ID', 'Plant State', 'Operating Year', 'Balancing Authority Code']]
         except:
             url = base_url + 'archive/' + f'xls/{filename}'
             save_path = DATA_PATHS['eia860m'] / filename
             download_save(url=url, save_path=save_path)
-            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            #t_edit_11_2022 changed usecols='C,F,P,AE' to names=['Plant ID', ...]
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1, skiprows=skiprows_int)
+            _m860 = _m860[['Plant ID', 'Plant State', 'Operating Year', 'Balancing Authority Code']]
             
         _m860.columns = _m860.columns.str.lower()
 
@@ -159,14 +163,16 @@ def label_new_spp_ercot(filename=None):
             url = base_url + f'xls/{filename}'
             save_path = DATA_PATHS['eia860m'] / filename
             download_save(url=url, save_path=save_path)
-            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            #t_edit_11_2022 changed usecols='C,F,P,AE' to names=['Plant ID', ...]
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1, skiprows=skiprows_int)
+            _m860 = _m860[['Plant ID', 'Plant State', 'Operating Year', 'Balancing Authority Code']]
         except:
             url = base_url + 'archive/' + f'xls/{filename}'
             save_path = DATA_PATHS['eia860m'] / filename
             download_save(url=url, save_path=save_path)
-            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1,
-                                  usecols='C,F,P,AE', skiprows=skiprows_int)
+            #t_edit_11_2022 changed usecols='C,F,P,AE' to names=['Plant ID', ...]
+            _m860 = pd.read_excel(save_path, sheet_name='Operating', skipfooter=1, skiprows=skiprows_int)
+            _m860 = _m860[['Plant ID', 'Plant State', 'Operating Year', 'Balancing Authority Code']]
             
         _m860.columns = _m860.columns.str.lower()
 
@@ -287,7 +293,7 @@ def classify_state(training, unknown_state):
 
 
 def label_unknown_regions():
-    #t_edit added an if statement that skips the ~20min ML script if the unnown dataframes are empty
+    #t_edit added an if statement that skips the ~20min ML script if the unknown dataframes are empty
 
     training = extract_nerc_labels_all_years()
     plants = load_plants()
